@@ -89,10 +89,27 @@ const AccoutnProfile = ({user, btnTitle}: Props)=>{
                   onChange={(e) => handleImage(e, field.onChange)}
                   />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-4 w-full">
+                <FormLabel className="text-base-semibold text-light-2">
+                    Name
+                </FormLabel>
+                <FormControl className="flex-1 text-base-semibold text-gray-200">
+                  <Input 
+                  type="file"
+                  accept="image/*"
+                  placeholder="Upload a photo"
+                  className="account-form_input no-focus"
+                  {...field}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />
