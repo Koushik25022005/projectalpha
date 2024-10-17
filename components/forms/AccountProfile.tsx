@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { userValidation } from "@/lib/validations/user"
 import {zodResolver} from "@hookform/resolvers/zod"
 import Image from "next/image"
+import { ChangeEvent } from "react"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 
@@ -39,6 +40,10 @@ const AccoutnProfile = ({user, btnTitle}: Props)=>{
         }
 
     })
+
+    const handleImage = (e: ChangeEvent, fieldChange: (value: string)=> void) => {
+      e.preventDefault();
+    } 
     function onSubmit(values: z.infer<typeof userValidation>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
@@ -75,8 +80,14 @@ const AccoutnProfile = ({user, btnTitle}: Props)=>{
                         />
                     )}
                 </FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                <FormControl className="flex-1 text-base-semibold text-gray-200">
+                  <Input 
+                  type="file"
+                  accept="image/*"
+                  placeholder="Upload a photo"
+                  className="account-form_image-input"
+                  onChange={(e) => handleImage(e, field.onChange)}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is your public display name.
