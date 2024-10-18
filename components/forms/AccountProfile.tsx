@@ -17,6 +17,8 @@ import Image from "next/image"
 import { ChangeEvent, useState } from "react"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
+import { isBase64Image } from "@/lib/utils"
+import {useUploadThing} from "@/lib/uploadthing"
 
 interface Props {
     user: {
@@ -31,7 +33,8 @@ interface Props {
   }
 
 const AccoutnProfile = ({user, btnTitle}: Props)=>{
-  const [files, setSiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const {startUpload} = useUploadThing("media");
     const form = useForm({
         resolver: zodResolver(userValidation),
         defaultValues:{
@@ -64,8 +67,20 @@ const AccoutnProfile = ({user, btnTitle}: Props)=>{
         fileReader.readAsDataURL(file);
       }
     } 
-    function onSubmit(values: z.infer<typeof userValidation>) {
-        const blob = values.profile_photo
+    const onSubmit = async(values: z.infer<typeof userValidation>) => {
+        const blob = values.profile_photo;
+
+        const hasImagedChanged = isBase64Image(blob);
+
+        if (hasImagedChanged){
+          const imgRes = await startUpload(files);
+
+          if (imgRes && imgRes[0].fileUrl){
+            values.profile_photo = imgRes[0].fileUrl;
+          }
+        }
+
+        //TTODO: Update user profile
       }
     return (
         <Form {...form}>
